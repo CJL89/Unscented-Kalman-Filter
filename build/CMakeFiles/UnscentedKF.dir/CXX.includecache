@@ -1402,10 +1402,6 @@ stddef.h
 sys/types.h
 -
 
-/usr/local/opt/openssl/include/openssl/comp.h
-openssl/crypto.h
--
-
 /usr/local/opt/openssl/include/openssl/crypto.h
 stdlib.h
 -

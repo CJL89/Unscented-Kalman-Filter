@@ -28,11 +28,23 @@ public:
   ///* state covariance matrix
   MatrixXd P_;
 
-  ///* predicted sigma points matrix
+  ///* Process noise covariance matrix for augmented state covariance matrix expand
+  MatrixXd Q_;
+
+  ///* Lidar Measurement noise covariance matrix
+  MatrixXd R_lidar_;
+
+  ///* Radar Measurement noise covariance matrix
+  MatrixXd R_radar_;
+
+  ///* predicted process sigma points matrix
   MatrixXd Xsig_pred_;
+  ///* augmented state matrix
+  MatrixXd Xsig_aug_;
 
   ///* time when the state is true, in us
-  long long time_us_;
+  long long previous_time;
+  double delta_t;
 
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
@@ -67,6 +79,29 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+  ///* Radar sigma point in measurement space
+  MatrixXd Zsig_radar_;
+
+  ///* Lidar sigma point in measurement space
+  MatrixXd Zsig_lidar_;
+
+  ///* Measured mean states for radar
+  VectorXd z_pred_radar_;
+
+  ///* Measured mean states for lidar
+  VectorXd z_pred_lidar_;
+
+  ///* Radar innovation covariance matrix
+  MatrixXd S_radar_;
+
+  ///* Lidar innovation covariance matrix
+  MatrixXd S_lidar_;
+
+  ///* Radar measurement dimension, radar can measure rho, phi, and rho_dot
+  int n_z_radar_;
+
+  ///* Lidar measurement dimension, lidar measures px, py
+  int n_z_lidar_;
 
   /**
    * Constructor
@@ -85,21 +120,17 @@ public:
   void ProcessMeasurement(MeasurementPackage meas_package);
 
   /**
-   * Prediction Predicts sigma points, the state, and the state covariance
-   * matrix
-   * @param delta_t Time between k and k+1 in s
+   * Prediction Predicts sigma points, the state, and the state covariance matrix
    */
-  void Prediction(double delta_t);
+  void Prediction();
 
   /**
-   * Updates the state and the state covariance matrix using a laser measurement
-   * @param meas_package The measurement at k+1
+   * Calculate predicted mean and covariance of states
    */
   void UpdateLidar(MeasurementPackage meas_package);
 
   /**
-   * Updates the state and the state covariance matrix using a radar measurement
-   * @param meas_package The measurement at k+1
+   * Perform the update of state and covariance of Radar measurement
    */
   void UpdateRadar(MeasurementPackage meas_package);
 };
